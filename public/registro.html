@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Aluno</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Registrar Aluno</h2>
+        <form id="registroForm" novalidate>
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" placeholder="Nome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="curso">Curso:</label>
+                <select id="curso" required>
+                    <option value="">Escolha um curso</option>
+                    <option value="Design">Design</option>
+                    <option value="Games">Games</option>
+                    <option value="Administração">Administração</option>
+                    <option value="Informática">Informática</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="horario">Horário:</label>
+                <select id="horario" required>
+                    <option value="">Escolha um horário</option>
+                    <option value="08:00 - 10:00">08:00 - 10:00</option>
+                    <option value="10:00 - 12:00">10:00 - 12:00</option>
+                    <option value="14:00 - 16:00">14:00 - 16:00</option>
+                    <option value="16:00 - 18:00">16:00 - 18:00</option>
+                    <option value="18:00 - 20:00">18:00 - 20:00</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="diaSemana">Dia da Semana:</label>
+                <select id="diaSemana" required>
+                    <option value="">Escolha um dia</option>
+                    <option value="Segunda-feira">Segunda-feira</option>
+                    <option value="Terça-feira">Terça-feira</option>
+                    <option value="Quarta-feira">Quarta-feira</option>
+                    <option value="Quinta-feira">Quinta-feira</option>
+                    <option value="Sexta-feira">Sexta-feira</option>
+                    <option value="Sábado">Sábado</option>
+                    <option value="Domingo">Domingo</option>
+                </select>
+            </div>
+
+            <button type="submit" id="submitButton">Salvar</button>
+        </form>
+
+        <p id="mensagem" class="message"></p>
+        <a href="chamada.html" class="link">Ir para Chamada</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+[
+  {
+    "nome": "Breno Neves",
+    "horario": "08:00 - 10:00",
+    "diaSemana": "Segunda-feira",
+    "curso": "Informática"
+  },
+  {
+    "nome": "Gabriel Gamon",
+    "horario": "08:00 - 10:00",
+    "diaSemana": "Segunda-feira",
+    "curso": "Informática"
+  },
+  {
+    "nome": "Bianca bianca",
+    "horario": "08:00 - 10:00",
+    "diaSemana": "Segunda-feira",
+    "curso": "Informática"
+  },
+  {
+    "nome": "Mauricio Filho",
+    "horario": "08:00 - 10:00",
+    "diaSemana": "Segunda-feira",
+    "curso": "Informática"
+  }
+]

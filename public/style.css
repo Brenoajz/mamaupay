@@ -1,0 +1,159 @@
+/* Estilos gerais */
+* {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;  /* Alinha os itens no topo */
+    flex-direction: column;  /* Alinha os itens em coluna */
+    height: 100vh;
+    background: #f7f7f7;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.filters {
+    display: flex;
+    flex-direction: column;  /* Coloca os filtros em coluna */
+    gap: 20px;
+    width: 100%;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus, button:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    align-self: center;  /* Centraliza o botão */
+    width: auto;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+}
+
+th, td {
+    padding: 15px 20px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-size: 16px;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+}
+
+td {
+    background-color: #fff;
+}
+
+td.alerta {
+    color: red;
+    font-weight: bold;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .filters {
+        gap: 15px;  /* Reduz o espaço entre os filtros em telas pequenas */
+    }
+
+    input, select, button {
+        font-size: 14px;  /* Ajusta o tamanho da fonte em telas pequenas */
+    }
+
+    table {
+        margin-top: 20px;
+    }
+
+    th, td {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+}
+
+/* Estilos para os alertas de mensagem */
+.message {
+    font-size: 14px;
+    color: red;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.link {
+    display: block;
+    text-align: center;
+    margin-top: 30px;
+    color: #4CAF50;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.link:hover {
+    text-decoration: underline;
+}

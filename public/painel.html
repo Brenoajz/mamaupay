@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Frequência</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Controle de Frequência</h1>
+    </header>
+
+    <main>
+        <!-- Filtros -->
+        <section class="filters">
+            <label for="cursoFilter" class="sr-only">Curso</label>
+            <select id="cursoFilter" onchange="filterAlunos()" aria-label="Filtro por curso">
+                <option value="">Selecione o Curso</option>
+                <option value="Informática">Informática</option>
+                <option value="Design">Design</option>
+                <option value="Games">Games</option>
+                <option value="Administração">Administração</option>
+            </select>
+
+            <label for="diaSemanaFilter" class="sr-only">Dia da Semana</label>
+            <select id="diaSemanaFilter" onchange="filterAlunos()" aria-label="Filtro por dia da semana">
+                <option value="">Selecione o Dia da Semana</option>
+                <option value="Segunda-feira">Segunda-feira</option>
+                <option value="Terça-feira">Terça-feira</option>
+                <option value="Quarta-feira">Quarta-feira</option>
+                <option value="Quinta-feira">Quinta-feira</option>
+                <option value="Sexta-feira">Sexta-feira</option>
+                <option value="Sábado">Sábado</option>
+                <option value="Domingo">Domingo</option>
+            </select>
+
+            <label for="horarioFilter" class="sr-only">Horário</label>
+            <select id="horarioFilter" onchange="filterAlunos()" aria-label="Filtro por horário">
+                <option value="">Selecione o Horário</option>
+                <option value="08:00 - 10:00">08:00 - 10:00</option>
+                <option value="10:00 - 12:00">10:00 - 12:00</option>
+                <option value="14:00 - 16:00">14:00 - 16:00</option>
+                <option value="16:00 - 18:00">16:00 - 18:00</option>
+                <option value="18:00 - 20:00">18:00 - 20:00</option>
+            </select>
+        </section>
+
+        <!-- Tabela de Alunos -->
+        <section>
+            <table id="alunosTable" aria-labelledby="alunosTable">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Curso</th>
+                        <th>Dia da Semana</th>
+                        <th>Horário</th>
+                        <th>Presenças</th>
+                        <th>Ausentes</th>
+                        <th>Alerta</th>
+                        <th>Ações</th> <!-- Coluna de Ações (Excluir) -->
+                    </tr>
+                </thead>
+                <tbody id="alunosBody"></tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="painel.js"></script>
+</body>
+
+</html>
