@@ -83,6 +83,7 @@ async function filterAlunos() {
     renderAlunos(alunos);
 }
 
+// Função para confirmar exclusão de um aluno
 function confirmarExclusao(nomeAluno) {
     const confirmar = window.confirm(`Você tem certeza que deseja excluir o aluno ${nomeAluno}?`);
 
@@ -91,9 +92,10 @@ function confirmarExclusao(nomeAluno) {
     }
 }
 
+// Função para excluir um aluno
 async function excluirAluno(nomeAluno) {
     try {
-        const response = await fetch(`http://localhost:3000/alunos/${nomeAluno}`, {
+        const response = await fetch(`https:/aprendejovem.glitch.me/alunos/${nomeAluno}`, {
             method: 'DELETE',
         });
 

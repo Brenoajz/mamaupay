@@ -10,9 +10,12 @@ const DATA_FILE = path.join(DATA_DIR, 'Aluno.json');
 const CHAMADA_FILE = path.join(DATA_DIR, 'Chamada.json');
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: '*',  // Isso permite qualquer origem. Use com cautela em produção!
+}));
 app.use(express.json());
 app.use(express.static('public'));
+
 
 // Função genérica para ler JSON com tratamento de erro
 const lerJSON = (filePath) => {
