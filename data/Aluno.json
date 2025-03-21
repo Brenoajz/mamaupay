@@ -40,5 +40,11 @@
     "horario": "08:00 - 10:00",
     "diaSemana": "Sexta-feira",
     "curso": "Design"
+  },
+  {
+    "nome": "Novoaluno",
+    "horario": "08:00 - 10:00",
+    "diaSemana": "Segunda-feira",
+    "curso": "Informática"
   }
 ]

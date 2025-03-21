@@ -51,7 +51,10 @@ function criarLinhaAluno(aluno, presencas, ausentes, ausentesConsecutivas) {
         <td>${aluno.horario}</td>
         <td>${presencas}</td>
         <td>${ausentes}</td>
-        <td class="alerta">${ausentesConsecutivas >= 3 ? 'Alerta: Faltou 3 dias seguidos!' : ''}</td>
+        <td class="alerta ${ausentesConsecutivas >= 3 ? 'alerta-critico' : ''}">
+            ${ausentesConsecutivas >= 3 ? 'Alerta: Faltou 3 dias seguidos!' : ''}
+        </td>
+        <td><button class="deleteBtn" onclick="confirmarExclusao('${aluno.nome}')">Excluir</button></td>
     `;
     return alunoRow;
 }
@@ -80,23 +83,6 @@ async function filterAlunos() {
     renderAlunos(alunos);
 }
 
-function criarLinhaAluno(aluno, presencas, ausentes, ausentesConsecutivas) {
-    const alunoRow = document.createElement('tr');
-    
-    alunoRow.innerHTML = `
-        <td>${aluno.nome}</td>
-        <td>${aluno.curso}</td>
-        <td>${aluno.diaSemana}</td>
-        <td>${aluno.horario}</td>
-        <td>${presencas}</td>
-        <td>${ausentes}</td>
-        <td class="alerta">${ausentesConsecutivas >= 3 ? 'Alerta: Faltou 3 dias seguidos!' : ''}</td>
-        <td><button class="deleteBtn" onclick="confirmarExclusao('${aluno.nome}')">Excluir</button></td>
-    `;
-
-    return alunoRow;
-}
-
 function confirmarExclusao(nomeAluno) {
     const confirmar = window.confirm(`Você tem certeza que deseja excluir o aluno ${nomeAluno}?`);
 
@@ -122,7 +108,6 @@ async function excluirAluno(nomeAluno) {
         alert('Erro ao tentar excluir o aluno');
     }
 }
-
 
 // Carrega os alunos ao iniciar a página
 window.onload = filterAlunos;
