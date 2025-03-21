@@ -1,7 +1,7 @@
 // Função para buscar os alunos com filtros
 async function getAlunos(curso = '', diaSemana = '', horario = '') {
     try {
-        const response = await fetch(`http://localhost:3000/alunos?curso=${curso}&diaSemana=${diaSemana}&horario=${horario}`);
+        const response = await fetch(`https://aprendejovem.glitch.me//alunos?curso=${curso}&diaSemana=${diaSemana}&horario=${horario}`);
         if (!response.ok) throw new Error('Erro ao buscar alunos');
         return await response.json();
     } catch (error) {
