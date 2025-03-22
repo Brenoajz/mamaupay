@@ -1,5 +1,13 @@
 [
   {
+    "horario": "08:00 - 10:00",
+    "diaSemana": "Segunda-feira",
+    "presentes": [],
+    "ausentes": [],
+    "data": "22/03/2025",
+    "hora": "08:13:54"
+  },
+  {
     "horario": "18:00 - 20:00",
     "diaSemana": "Sexta-feira",
     "presentes": [
@@ -10,6 +18,6 @@
       "Paulo Cope"
     ],
     "data": "22/03/2025",
-    "hora": "09:21:54"
+    "hora": "09:20:54"
   }
 ]
