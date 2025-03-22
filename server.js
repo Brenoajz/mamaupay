@@ -11,28 +11,29 @@ const CHAMADA_FILE = path.join(DATA_DIR, 'Chamada.json');
 
 // Middleware
 app.use(cors({
-  origin: '*',  // Isso permite qualquer origem. Use com cautela em produção!
+  origin: '*' // Em produção, substitua por um domínio específico.
 }));
 app.use(express.json());
 app.use(express.static('public'));
 
-
-// Função genérica para ler JSON com tratamento de erro
+// Função para ler JSON com tratamento de erro detalhado
 const lerJSON = (filePath) => {
     try {
-        return JSON.parse(fs.readFileSync(filePath, 'utf8')) || [];
+        if (!fs.existsSync(filePath)) return [];
+        const data = fs.readFileSync(filePath, 'utf8');
+        return data ? JSON.parse(data) : [];
     } catch (error) {
-        console.error(`Erro ao ler ${filePath}:`, error);
+        console.error(`Erro ao ler ${filePath}:`, error.message);
         return [];
     }
 };
 
-// Função para salvar JSON com segurança
+// Função para salvar JSON com tratamento de erro detalhado
 const salvarJSON = (filePath, data) => {
     try {
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
     } catch (error) {
-        console.error(`Erro ao salvar ${filePath}:`, error);
+        console.error(`Erro ao salvar ${filePath}:`, error.message);
     }
 };
 
@@ -125,7 +126,7 @@ app.post('/registrarChamada', (req, res) => {
     }
 });
 
-// Rota para obter todas as chamadas de um aluno
+// Rota para obter todas as chamadas de um aluno (ordenadas por data)
 app.get('/chamada', (req, res) => {
     const { nome } = req.query;
     if (!nome) return res.status(400).json({ error: 'Nome do aluno é necessário.' });
@@ -134,24 +135,42 @@ app.get('/chamada', (req, res) => {
         const chamadas = lerJSON(CHAMADA_FILE).filter(chamada =>
             chamada.presentes.includes(nome) || chamada.ausentes.includes(nome)
         );
+
+        chamadas.sort((a, b) => {
+            const [diaA, mesA, anoA] = a.data.split('/').map(Number);
+            const [diaB, mesB, anoB] = b.data.split('/').map(Number);
+            return new Date(anoA, mesA - 1, diaA) - new Date(anoB, mesB - 1, diaB);
+        });
+
         res.json(chamadas);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao buscar chamadas do aluno.' });
     }
 });
 
-// Rota para excluir aluno
+// Rota para excluir aluno (verificando se há chamadas registradas)
 app.delete('/alunos/:nome', (req, res) => {
     try {
         const nomeAluno = req.params.nome;
         let alunos = lerJSON(DATA_FILE);
-        const novoAlunos = alunos.filter(aluno => aluno.nome !== nomeAluno);
+        const chamadas = lerJSON(CHAMADA_FILE);
 
-        if (alunos.length === novoAlunos.length) {
+        // Verifica se o aluno possui chamadas registradas
+        const temChamada = chamadas.some(chamada =>
+            chamada.presentes.includes(nomeAluno) || chamada.ausentes.includes(nomeAluno)
+        );
+
+        if (temChamada) {
+            return res.status(400).json({ error: 'Não é possível excluir o aluno, pois há chamadas registradas.' });
+        }
+
+        const novosAlunos = alunos.filter(aluno => aluno.nome !== nomeAluno);
+
+        if (alunos.length === novosAlunos.length) {
             return res.status(404).json({ error: 'Aluno não encontrado.' });
         }
 
-        salvarJSON(DATA_FILE, novoAlunos);
+        salvarJSON(DATA_FILE, novosAlunos);
         res.json({ message: `Aluno ${nomeAluno} excluído com sucesso!` });
     } catch (error) {
         res.status(500).json({ error: 'Erro ao excluir aluno.' });
