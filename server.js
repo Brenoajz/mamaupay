@@ -16,11 +16,11 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static('public'));
 
-// Função para ler JSON com tratamento de erro detalhado
-const lerJSON = (filePath) => {
+// Função assíncrona para ler JSON
+const lerJSON = async (filePath) => {
     try {
         if (!fs.existsSync(filePath)) return [];
-        const data = fs.readFileSync(filePath, 'utf8');
+        const data = await fs.promises.readFile(filePath, 'utf8');
         return data ? JSON.parse(data) : [];
     } catch (error) {
         console.error(`Erro ao ler ${filePath}:`, error.message);
@@ -28,10 +28,10 @@ const lerJSON = (filePath) => {
     }
 };
 
-// Função para salvar JSON com tratamento de erro detalhado
-const salvarJSON = (filePath, data) => {
+// Função assíncrona para salvar JSON
+const salvarJSON = async (filePath, data) => {
     try {
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+        await fs.promises.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
     } catch (error) {
         console.error(`Erro ao salvar ${filePath}:`, error.message);
     }
@@ -55,9 +55,9 @@ const validarDadosChamada = ({ horario, diaSemana, presentes, ausentes }) =>
         : { valido: false, mensagem: 'Dados incompletos para registrar a chamada.' };
 
 // Rota para verificar se o aluno já está registrado
-app.get('/verificarRegistro', (req, res) => {
+app.get('/verificarRegistro', async (req, res) => {
     const { nome, curso, diaSemana, horario } = req.query;
-    const alunos = lerJSON(DATA_FILE);
+    const alunos = await lerJSON(DATA_FILE);
     const alunoExistente = alunos.some(aluno =>
         aluno.nome === nome && aluno.curso === curso && aluno.diaSemana === diaSemana && aluno.horario === horario
     );
@@ -65,14 +65,14 @@ app.get('/verificarRegistro', (req, res) => {
 });
 
 // Rota para registrar aluno
-app.post('/registrar', (req, res) => {
+app.post('/registrar', async (req, res) => {
     const { valido, mensagem } = validarDadosAluno(req.body);
     if (!valido) return res.status(400).json({ error: mensagem });
 
     try {
-        const alunos = lerJSON(DATA_FILE);
+        const alunos = await lerJSON(DATA_FILE);
         alunos.push(req.body);
-        salvarJSON(DATA_FILE, alunos);
+        await salvarJSON(DATA_FILE, alunos);
         res.json({ message: 'Aluno registrado com sucesso!' });
     } catch (error) {
         res.status(500).json({ error: 'Erro ao registrar aluno.' });
@@ -80,10 +80,10 @@ app.post('/registrar', (req, res) => {
 });
 
 // Rota para obter alunos filtrados
-app.get('/alunos', (req, res) => {
+app.get('/alunos', async (req, res) => {
     try {
         const { curso, horario, diaSemana } = req.query;
-        const alunos = lerJSON(DATA_FILE).filter(aluno =>
+        const alunos = (await lerJSON(DATA_FILE)).filter(aluno =>
             (!curso || aluno.curso === curso) &&
             (!horario || aluno.horario === horario) &&
             (!diaSemana || aluno.diaSemana === diaSemana)
@@ -95,7 +95,7 @@ app.get('/alunos', (req, res) => {
 });
 
 // Rota para registrar chamada
-app.post('/registrarChamada', (req, res) => {
+app.post('/registrarChamada', async (req, res) => {
     const { valido, mensagem } = validarDadosChamada(req.body);
     if (!valido) return res.status(400).json({ error: mensagem });
 
@@ -105,7 +105,7 @@ app.post('/registrarChamada', (req, res) => {
         const dataFormatada = data || `${dataAtual.getDate()}/${dataAtual.getMonth() + 1}/${dataAtual.getFullYear()}`;
         const diaDoMes = dataFormatada.split('/')[0];
 
-        const chamadas = lerJSON(CHAMADA_FILE);
+        const chamadas = await lerJSON(CHAMADA_FILE);
         if (chamadas.some(chamada => chamada.data.split('/')[0] === diaDoMes && chamada.horario === horario)) {
             return res.status(400).json({ error: `Já existe uma chamada registrada para este dia (${dataFormatada}) no horário ${horario}.` });
         }
@@ -119,7 +119,7 @@ app.post('/registrarChamada', (req, res) => {
             hora: hora || `${dataAtual.getHours()}:${dataAtual.getMinutes()}:${dataAtual.getSeconds()}`
         });
 
-        salvarJSON(CHAMADA_FILE, chamadas);
+        await salvarJSON(CHAMADA_FILE, chamadas);
         res.json({ message: 'Chamada registrada com sucesso!' });
     } catch (error) {
         res.status(500).json({ error: 'Erro ao registrar chamada.' });
@@ -127,12 +127,12 @@ app.post('/registrarChamada', (req, res) => {
 });
 
 // Rota para obter todas as chamadas de um aluno (ordenadas por data)
-app.get('/chamada', (req, res) => {
+app.get('/chamada', async (req, res) => {
     const { nome } = req.query;
     if (!nome) return res.status(400).json({ error: 'Nome do aluno é necessário.' });
 
     try {
-        const chamadas = lerJSON(CHAMADA_FILE).filter(chamada =>
+        const chamadas = (await lerJSON(CHAMADA_FILE)).filter(chamada =>
             chamada.presentes.includes(nome) || chamada.ausentes.includes(nome)
         );
 
@@ -149,11 +149,11 @@ app.get('/chamada', (req, res) => {
 });
 
 // Rota para excluir aluno (verificando se há chamadas registradas)
-app.delete('/alunos/:nome', (req, res) => {
+app.delete('/alunos/:nome', async (req, res) => {
     try {
         const nomeAluno = req.params.nome;
-        let alunos = lerJSON(DATA_FILE);
-        const chamadas = lerJSON(CHAMADA_FILE);
+        let alunos = await lerJSON(DATA_FILE);
+        const chamadas = await lerJSON(CHAMADA_FILE);
 
         // Verifica se o aluno possui chamadas registradas
         const temChamada = chamadas.some(chamada =>
@@ -170,7 +170,7 @@ app.delete('/alunos/:nome', (req, res) => {
             return res.status(404).json({ error: 'Aluno não encontrado.' });
         }
 
-        salvarJSON(DATA_FILE, novosAlunos);
+        await salvarJSON(DATA_FILE, novosAlunos);
         res.json({ message: `Aluno ${nomeAluno} excluído com sucesso!` });
     } catch (error) {
         res.status(500).json({ error: 'Erro ao excluir aluno.' });

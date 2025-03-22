@@ -1,7 +1,7 @@
 // Função para buscar os alunos com filtros
 async function getAlunos(curso = '', diaSemana = '', horario = '') {
     try {
-        const response = await fetch(`/alunos?curso=${encodeURIComponent(curso)}&diaSemana=${encodeURIComponent(diaSemana)}&horario=${encodeURIComponent(horario)}`);
+        const response = await fetch(`/alunos?curso=${curso}&diaSemana=${diaSemana}&horario=${horario}`);
         if (!response.ok) throw new Error('Erro ao buscar alunos');
         return await response.json();
     } catch (error) {
@@ -13,7 +13,7 @@ async function getAlunos(curso = '', diaSemana = '', horario = '') {
 // Função para buscar as chamadas de um aluno
 async function getChamadas(nome) {
     try {
-        const response = await fetch(`/chamada?nome=${encodeURIComponent(nome)}`);
+        const response = await fetch(`/chamada?nome=${nome}`);
         if (!response.ok) throw new Error('Erro ao buscar chamadas');
         return await response.json();
     } catch (error) {
@@ -51,10 +51,7 @@ function criarLinhaAluno(aluno, presencas, ausentes, ausentesConsecutivas) {
         <td>${aluno.horario}</td>
         <td>${presencas}</td>
         <td>${ausentes}</td>
-        <td class="alerta ${ausentesConsecutivas >= 3 ? 'alerta-critico' : ''}">
-            ${ausentesConsecutivas >= 3 ? 'Alerta: Faltou 3 dias seguidos!' : ''}
-        </td>
-        <td><button class="deleteBtn" onclick="confirmarExclusao('${aluno.nome}')">Excluir</button></td>
+        <td class="alerta">${ausentesConsecutivas >= 3 ? 'Alerta: Faltou 3 dias seguidos!' : ''}</td>
     `;
     return alunoRow;
 }
@@ -83,7 +80,23 @@ async function filterAlunos() {
     renderAlunos(alunos);
 }
 
-// Função para confirmar exclusão de um aluno
+function criarLinhaAluno(aluno, presencas, ausentes, ausentesConsecutivas) {
+    const alunoRow = document.createElement('tr');
+    
+    alunoRow.innerHTML = `
+        <td>${aluno.nome}</td>
+        <td>${aluno.curso}</td>
+        <td>${aluno.diaSemana}</td>
+        <td>${aluno.horario}</td>
+        <td>${presencas}</td>
+        <td>${ausentes}</td>
+        <td class="alerta">${ausentesConsecutivas >= 3 ? 'Alerta: Faltou 3 dias seguidos!' : ''}</td>
+        <td><button class="deleteBtn" onclick="confirmarExclusao('${aluno.nome}')">Excluir</button></td>
+    `;
+
+    return alunoRow;
+}
+
 function confirmarExclusao(nomeAluno) {
     const confirmar = window.confirm(`Você tem certeza que deseja excluir o aluno ${nomeAluno}?`);
 
@@ -92,10 +105,9 @@ function confirmarExclusao(nomeAluno) {
     }
 }
 
-// Função para excluir um aluno
 async function excluirAluno(nomeAluno) {
     try {
-        const response = await fetch(`/alunos/${encodeURIComponent(nomeAluno)}`, {
+        const response = await fetch(`/alunos/${nomeAluno}`, {
             method: 'DELETE',
         });
 
@@ -110,6 +122,7 @@ async function excluirAluno(nomeAluno) {
         alert('Erro ao tentar excluir o aluno');
     }
 }
+
 
 // Carrega os alunos ao iniciar a página
 window.onload = filterAlunos;
