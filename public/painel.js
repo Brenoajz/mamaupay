@@ -1,7 +1,7 @@
 // Função para buscar os alunos com filtros
 async function getAlunos(curso = '', diaSemana = '', horario = '') {
     try {
-        const response = await fetch(`https://aprendejovem.glitch.me//alunos?curso=${curso}&diaSemana=${diaSemana}&horario=${horario}`);
+        const response = await fetch(`/alunos?curso=${encodeURIComponent(curso)}&diaSemana=${encodeURIComponent(diaSemana)}&horario=${encodeURIComponent(horario)}`);
         if (!response.ok) throw new Error('Erro ao buscar alunos');
         return await response.json();
     } catch (error) {
@@ -13,7 +13,7 @@ async function getAlunos(curso = '', diaSemana = '', horario = '') {
 // Função para buscar as chamadas de um aluno
 async function getChamadas(nome) {
     try {
-        const response = await fetch(`http://localhost:3000/chamada?nome=${nome}`);
+        const response = await fetch(`/chamada?nome=${encodeURIComponent(nome)}`);
         if (!response.ok) throw new Error('Erro ao buscar chamadas');
         return await response.json();
     } catch (error) {
@@ -95,7 +95,7 @@ function confirmarExclusao(nomeAluno) {
 // Função para excluir um aluno
 async function excluirAluno(nomeAluno) {
     try {
-        const response = await fetch(`https:/aprendejovem.glitch.me/alunos/${nomeAluno}`, {
+        const response = await fetch(`/alunos/${encodeURIComponent(nomeAluno)}`, {
             method: 'DELETE',
         });
 
